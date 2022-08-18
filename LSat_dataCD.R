@@ -15,43 +15,43 @@ setwd("~/R/Projects/Landsat_AV/data")
 
 #________Load and prepare data_______________
 
-A <- read.csv("AV_L_clip.csv")
-B <- read.csv("L_AV_Bog_new.csv")
-C <- read.csv("L_AV_bog_plotR_new.csv")
-
-A <- subset (A, select = -c(3,5,6))
+# A <- read.csv("AV_L_clip.csv")
+# B <- read.csv("L_AV_Bog_new.csv")
+# C <- read.csv("L_AV_bog_plotR_new.csv")
+# 
+# A <- subset (A, select = -c(3,5,6))
 
 data.prep <- function(a){
-     
+
      # coordinates
      a$coordinates <- substr(a$.geo, 49, nchar(a$.geo)-2)
      s <- strsplit(a$coordinates, split=',', fixed=TRUE)
-     
+
      cdf <- data.frame(t(sapply(s,c)))
      names(cdf) <- c("E", "N")
-     
+
      a$N <- as.numeric(cdf$N)
      a$E <- as.numeric(cdf$E)
-     
+
      rm(list = "cdf")
-     
+
      # dates
      end7 <- length(which(substr(a$system.index, 1, 1) == 1))
      dates <- c(substr(a$system.index[1:end7], 17, 24), substr(a$system.index[(end7+1):nrow(a)], 15, 22))
-     a$date <- ymd(dates) 
+     a$date <- ymd(dates)
      a$year <- year(a$date)
      a$month <- month(a$date)
-     
-     a$season <- ifelse(month(a$date) >= 3 & month(a$date) <= 5, "spring", 
+
+     a$season <- ifelse(month(a$date) >= 3 & month(a$date) <= 5, "spring",
                         ifelse(month(a$date) >= 6 & month(a$date) <= 8, "summer",
                                ifelse(month(a$date) >= 9 & month(a$date) <= 11, "autumn", "winter")))
-     
-     return(a)     
+
+     return(a)
 }
 
-A <- data.prep(A)
-B <- data.prep(B)
-C <- data.prep(C)
+# A <- data.prep(A)
+# B <- data.prep(B)
+# C <- data.prep(C)
 
 
 # Dates and coordinates
@@ -64,7 +64,10 @@ Bcoordinates <- unique(B$coordinates)
 Cdates <- unique(C$date)
 Ccoordinates <- unique(C$coordinates)
 
-
+#
+A_agg <- read.table("/A_agg.txt", sep = ";", dec = ".", header = T)
+B_agg <- read.table("/B_agg.txt", sep = ";", dec = ".", header = T)
+C_agg <- read.table("/C_agg.txt", sep = ";", dec = ".", header = T)
 
 # Aggregate
 A_agg <- aggregate.data.frame(A, by = list(A$date), FUN = median)
