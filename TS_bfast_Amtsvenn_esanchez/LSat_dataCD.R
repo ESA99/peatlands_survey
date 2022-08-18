@@ -15,11 +15,11 @@ setwd("~/R/Projects/Landsat_AV/data")
 
 #________Load and prepare data_______________
 
-# A <- read.csv("AV_L_clip.csv")
-# B <- read.csv("L_AV_Bog_new.csv")
-# C <- read.csv("L_AV_bog_plotR_new.csv")
-# 
-# A <- subset (A, select = -c(3,5,6))
+A <- read.csv("AV_L_clip.csv")
+B <- read.csv("L_AV_Bog_new.csv")
+C <- read.csv("L_AV_bog_plotR_new.csv")
+
+A <- subset (A, select = -c(3,5,6))
 
 data.prep <- function(a){
 
@@ -49,9 +49,9 @@ data.prep <- function(a){
      return(a)
 }
 
-# A <- data.prep(A)
-# B <- data.prep(B)
-# C <- data.prep(C)
+A <- data.prep(A)
+B <- data.prep(B)
+C <- data.prep(C)
 
 
 # Dates and coordinates
@@ -64,10 +64,21 @@ Bcoordinates <- unique(B$coordinates)
 Cdates <- unique(C$date)
 Ccoordinates <- unique(C$coordinates)
 
-#
-A_agg <- read.table("/A_agg.txt", sep = ";", dec = ".", header = T)
-B_agg <- read.table("/B_agg.txt", sep = ";", dec = ".", header = T)
-C_agg <- read.table("/C_agg.txt", sep = ";", dec = ".", header = T)
+
+#'*If loading the aggregated subsets: *
+# A_agg <- read.table("/A_agg.txt", sep = ";", dec = ".", header = T)
+# B_agg <- read.table("/B_agg.txt", sep = ";", dec = ".", header = T)
+# C_agg <- read.table("/C_agg.txt", sep = ";", dec = ".", header = T)
+# 
+# Adates <- unique(A_agg$date)
+# Acoordinates <- unique(A_agg$coordinates)
+# 
+# Bdates <- unique(B_agg$date)
+# Bcoordinates <- unique(B_agg$coordinates)
+# 
+# Cdates <- unique(C_agg$date)
+# Ccoordinates <- unique(C_agg$coordinates)
+
 
 # Aggregate
 A_agg <- aggregate.data.frame(A, by = list(A$date), FUN = median)
