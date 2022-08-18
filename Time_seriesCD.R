@@ -1,15 +1,4 @@
 
-#____Mean by date and time series for bfast______#
-
-# Time steps
-days <- seq(as.Date("1984-03-16"), as.Date("2022-05-01"), by="days")
-months <- seq(as.Date("1984-03-01"), as.Date("2022-04-01"), by="months")
-quarter <- seq(as.Date("1984-03-01"), as.Date("2022-04-01"), by="quarter")
-years <- seq(as.Date("1984-01-01"), as.Date("2022-01-01"), by="year")
-
-
-
-
 # _____Quartal time series_______
 
 Q <- Cgg
@@ -46,9 +35,6 @@ fit
 sum(diff(fit$output[[1]]$Tt[1:length(fit$output[[1]]$Tt)])/
          diff(time(fit$output[[1]]$Tt)[1:length(fit$output[[1]]$Tt)]))*1/4 
 
-sum(diff(fit$output[[1]]$Tt[86:length(fit$output[[1]]$Tt)])/
-         diff(time(fit$output[[1]]$Tt)[86:length(fit$output[[1]]$Tt)]))*1/4 
-
      
 
 
@@ -61,7 +47,7 @@ monthsdf <- as.data.frame(months)
 names(monthsdf) <- c("date")
                                                        ######'*aggregate by month needed*
 M$date <- ym(paste0(year(M$date),"-",month(M$date)))
-M <- aggregate.data.frame(M, by = list(M$date), FUN = mean)
+M <- aggregate.data.frame(M, by = list(M$date), FUN = median)
 
 monthsdf <- merge(M, monthsdf, by = c("date"), all.y = T)
 monthsdf <- monthsdf[!duplicated(monthsdf$date),]
@@ -95,7 +81,7 @@ M <- may
 i <- "NDVI"
      
 yearsdf <- data.frame(year = year(years))
-yearsdf <-  merge(aggregate.data.frame(M, by = list(M$year), FUN = mean), yearsdf, by = c("year"), all.y = T)
+yearsdf <-  merge(aggregate.data.frame(M, by = list(M$year), FUN = median), yearsdf, by = c("year"), all.y = T)
      
 yearsdf$intndmi <-  approxfun(yearsdf$year, yearsdf$ndmi)(yearsdf$year)
 yearsdf$intndvi <-  approxfun(yearsdf$year, yearsdf$ndvi)(yearsdf$year)
@@ -117,6 +103,9 @@ ifelse(length(which(is.na(yearsdf$intndmi))) == 0, "No NA", yearsdf <- yearsdf[-
      
      
 
+     
+     
+     
 
 # Slope for the whole time series
 sum(diff(fit$output[[1]]$Tt[1:length(fit$output[[1]]$Tt)])/
@@ -133,5 +122,3 @@ diff(fit$output[[1]]$Tt[1:length(fit$output[[1]]$Tt)])/
 
 
 
-#diagonal line in plot
-# segments(1984,0.23,2020,0.422565)
